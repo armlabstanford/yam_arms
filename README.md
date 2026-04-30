@@ -1,6 +1,6 @@
 # yam_arms
 
-Testing and control scripts for I2RT YAM robot arms.
+Preliminary testing and control scripts for I2RT YAM robot arms.
 
 ## Setup
 
