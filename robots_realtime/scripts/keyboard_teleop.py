@@ -1,19 +1,65 @@
 #!/usr/bin/env python3
 """Keyboard teleoperation for a single YAM arm.
 
-Usage:
-    uv run python scripts/keyboard_teleop.py --channel can0
+================================================================================
+SETUP
+================================================================================
 
-Controls:
-    1-6     : select arm joint (shoulder pan → wrist 3)
-    7       : select gripper
-    ↑ / k   : increase selected joint
-    ↓ / j   : decrease selected joint
-    [ / ]   : halve / double step size
-    g       : toggle gripper open/closed
-    r       : re-read current arm position as new target
-    0       : go to home (all zeros, gripper open)
-    q / ESC : quit (arm stays in place)
+1. Bring up the CAN interface for your follower arm:
+
+       sudo ip link set can0 up type can bitrate 1000000
+
+   Replace 'can0' with your actual interface (e.g. can_follow_l, can_follow_r).
+   To check available interfaces:
+
+       ip a | grep can
+
+2. From the robots_realtime/ directory, run:
+
+       uv run python scripts/keyboard_teleop.py --channel can0
+
+   Optional arguments:
+       --channel   CAN interface name         (default: can0)
+       --step      rad per key press          (default: 0.02)
+       --rate_hz   control loop rate in Hz    (default: 50)
+
+   Example with custom options:
+       uv run python scripts/keyboard_teleop.py --channel can_follow_l --step 0.05
+
+================================================================================
+CONTROLS
+================================================================================
+
+    1 - 7   : select joint to control
+                1 = Shoulder Pan
+                2 = Shoulder Pitch
+                3 = Elbow
+                4 = Wrist 1
+                5 = Wrist 2
+                6 = Wrist 3
+                7 = Gripper
+    ↑ / k   : increase selected joint angle
+    ↓ / j   : decrease selected joint angle
+    [       : halve step size (finer control)
+    ]       : double step size (coarser control)
+    g       : toggle gripper open / closed
+    r       : re-sync target to current arm position
+    0       : go to home position (all zeros, gripper open)
+    q / ESC : quit (arm holds its last position)
+
+================================================================================
+PICK AND PLACE EXAMPLE
+================================================================================
+
+    1. Use joints 1-6 + ↑/↓ to position the arm above the object.
+    2. Lower the arm toward the object (usually joint 2 or 3).
+    3. Press 'g' or select joint 7 + ↓ to close the gripper and grasp.
+    4. Lift and move the arm to the target location.
+    5. Press 'g' again to open the gripper and release the object.
+
+    Tip: use '[' to reduce step size for precise positioning near the object.
+
+================================================================================
 """
 
 import argparse
