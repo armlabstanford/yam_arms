@@ -121,7 +121,7 @@ def _load_sim_states(episode_dir: Path):
     return qposes, timestamps
 
 
-def _read_sim_config(episode_dir: Path) -> dict:
+def _read_sim_config(episode_dir: Path) -> dict: 
     """Read scene/task from session_meta.json if stored by the sim node."""
     meta_file = episode_dir / "session_meta.json"
     if not meta_file.exists():
